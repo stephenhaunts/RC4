@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace RC4
@@ -8,13 +9,13 @@ namespace RC4
         const int N = 256;
         int[] _sbox;
         readonly byte[] _seedKey;
-        string _text;
+        byte[] _data;
         int _i, _j;
 
-        public RC4Algorithm(byte[] seedKey, string text)
+        public RC4Algorithm(byte[] seedKey, byte[] data)
         {
             _seedKey = seedKey;
-            _text = text;
+            _data = data;
         }
 
         public RC4Algorithm(byte[] seedKey)
@@ -22,34 +23,34 @@ namespace RC4
             _seedKey = seedKey;
         }
 
-        public string Text
+        public byte[] Data
         {
             get
             {
-                return _text;
+                return _data;
             }
             set
             {
-                _text = value;
+                _data = value;
             }
         }
 
-        public string EnDeCrypt()
+        public byte[] EnDeCrypt()
         {
             Rc4Initialize();
 
-            var cipher = new StringBuilder();
+            var cipher = new List<byte>();
 
-            foreach (var t in _text)
+            foreach (var t in _data)
             {
                 var k = GetNextKeyByte();
 
                 var cipherBy = (t) ^ k;
 
-                cipher.Append(Convert.ToChar(cipherBy));
+                cipher.Add(Convert.ToByte(cipherBy));
             }
 
-            return cipher.ToString();
+            return cipher.ToArray();
         }
 
         public byte GetNextKeyByte()
